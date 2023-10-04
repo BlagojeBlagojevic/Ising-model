@@ -10,5 +10,4 @@ Based on https://www.youtube.com/watch?v=vwLb3XlPCB4   4.59 - 9.16
 ![Screenshot_2](https://github.com/BlagojeBlagojevic/Ising-model/assets/100707842/9552fc54-dfb1-4c08-a67e-cd0736453e67)
 
 
-# REFRE
 
