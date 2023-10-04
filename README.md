@@ -1,2 +1,5 @@
 # Ising-model
-C implementation of the Ising model
+
+C code to simulate the Ising model of a Ferromagnet.
+
+
