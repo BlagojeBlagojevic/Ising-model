@@ -167,8 +167,6 @@ void LodingParametars(void)
 	scanf("%f",&DISTRIBUTION);
 	assert(DISTRIBUTION > 0.0f);
 	assert(DISTRIBUTION < 1.0f);
-	
-	
 }
 int main()
 {
@@ -183,8 +181,6 @@ int main()
 	
 	uint32_t spins[height][width];
 	RandSpins(&spins);
-	printf("%f",M_TOTAL);
-	system("pause");
 	
 	while(1){
 		
