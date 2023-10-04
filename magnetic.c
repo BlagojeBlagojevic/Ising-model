@@ -140,19 +140,19 @@ void UpdateSpins(uint32_t spins[height][width])
 			E+=E_TOTAL;
 			chance = CalculateFermiDirackDistribution(E_TOTAL);
 			//printf("chance: %f\n",chance);
-			if(RandF() >= chance&&(E_TOTAL >= 0)){spins[x][y] = RED; M_TOTAL++;}
-			if(RandF() >= chance&&(E_TOTAL <= 0)){spins[x][y] = BLUE; M_TOTAL--;}
+			if(RandF() >= chance&&(E_TOTAL >= 0)){spins[x][y] = RED; if(spins[y][x] != RED) M_TOTAL++;}
+			if(RandF() >= chance&&(E_TOTAL <= 0)){spins[x][y] = BLUE;if(spins[y][x] != BLUE) M_TOTAL--;}
 		}
 		count++;
 		if(count%10000==0)
 		{
 			system("cls");
 			header();
-			printf("M = %f x10^(-3)\n",M_TOTAL/10.0f);
+			printf("M = %f x10^(-3)\n",M_TOTAL/(float)(width*height));
 			count = 0; 
 		}
 		E = 0;
-		M_TOTAL = 0;
+		//M_TOTAL = 0;
 	}
 	//system("pause");
 }
