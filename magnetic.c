@@ -19,8 +19,8 @@
 #include<time.h>
 #include<math.h>
 #undef main                //275 183
-#define width 200
-#define height 200
+#define width 400
+#define height 400
 #define SEED   100
 //#define T 0
 //#define J 100
@@ -138,13 +138,13 @@ void UpdateSpins(uint32_t spins[height][width])
 			//system("pause");
 			
 			
-			float E_TOTAL = -1*J*(E_TOP*E_BOTHOM*E_LEFT*E_RIGHT);
+			float E_TOTAL = -1*J*(E_TOP+E_BOTHOM+E_LEFT+E_RIGHT);
 			float chance;
 			E+=E_TOTAL;
 			chance = CalculateFermiDirackDistribution(E_TOTAL);
 			//printf("chance: %f\n",chance);
-			if((RandF() >= chance)&&(E_TOTAL >= 0)){spins[x][y] = RED; }
-			if((RandF() >= chance)&&(E_TOTAL <= 0)){spins[x][y] = BLUE;}
+			if((RandF() > chance)&&(E_TOTAL > 0)){spins[x][y] = RED; }
+		    else if((RandF() > chance)&&(E_TOTAL < 0)){spins[x][y] = BLUE;}
 		}
 		count++;
 		if(count%10000==0)
@@ -190,7 +190,7 @@ int main()
 	texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STREAMING,width,height);
 	
 	uint32_t spins[height][width];
-	RandSpins(&spins);
+	RandSpins(spins);
 	
 	while(1){
 		
@@ -213,7 +213,7 @@ int main()
 		SDL_RenderClear(renderer);
 		//
 		//UPDATE SPINS
-		UpdateSpins(&spins);
+		UpdateSpins(spins);
 		//
 	}
 	return 0;
