@@ -21,7 +21,7 @@
 #undef main                //275 183
 #define width 200
 #define height 200
-#define SEED   10
+#define SEED   100
 //#define T 0
 //#define J 100
 #define RED 0x00FF0000
@@ -32,12 +32,17 @@ float M_TOTAL = 0.0f;
 float E = 0.0f;
 size_t count = 0; 
 
+float RandF(void){
+	return (float)rand()/(float)RAND_MAX;
+}
+
+
 void RandSpins(uint32_t spins[height][width]){
-	srand(SEED);
+	srand(time(0));
 	
 	for(size_t y = 1;y < height-1;y++){
 		for(size_t x = 1;x < width-1;x++){
-			if(rand()%((int)(1/DISTRIBUTION))==0){
+			if(RandF()>DISTRIBUTION){
 				spins[y][x]= BLUE;  //BLUE
 				M_TOTAL--;
 			}
@@ -53,9 +58,7 @@ float CalculateFermiDirackDistribution(float E){
 	float k = 1.380649; //MOVED 10E-23 AS COPLING CONSTANT 
 	return 1/(expf(E/(k*T))+1); 	
 }
-float RandF(void){
-	return (float)rand()/(float)RAND_MAX;
-}
+
 void header(void)
 {
 	printf("************************************************************\n");
@@ -140,8 +143,8 @@ void UpdateSpins(uint32_t spins[height][width])
 			E+=E_TOTAL;
 			chance = CalculateFermiDirackDistribution(E_TOTAL);
 			//printf("chance: %f\n",chance);
-			if(RandF() >= chance&&(E_TOTAL >= 0)){spins[x][y] = RED; }
-			if(RandF() >= chance&&(E_TOTAL <= 0)){spins[x][y] = BLUE;}
+			if((RandF() >= chance)&&(E_TOTAL >= 0)){spins[x][y] = RED; }
+			if((RandF() >= chance)&&(E_TOTAL <= 0)){spins[x][y] = BLUE;}
 		}
 		count++;
 		if(count%10000==0)
@@ -195,8 +198,8 @@ int main()
 		uint32_t *pixels;
 		int pitch;        //SIZE BASED ON RESOLUTION
 		size_t j = 0;
-		
 		SDL_LockTexture(texture,NULL,(void**)&pixels,&pitch);
+
 			for(size_t i = 0; i < height; i++){
 				for(size_t k = 0; k < width; k++)
 				pixels[j++]=spins[i][k];
