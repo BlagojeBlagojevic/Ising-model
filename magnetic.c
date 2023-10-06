@@ -19,8 +19,8 @@
 #include<time.h>
 #include<math.h>
 #undef main                //275 183
-#define width 400
-#define height 400
+#define width 500
+#define height 500
 #define SEED   100
 //#define T 0
 //#define J 100
@@ -38,16 +38,16 @@ float RandF(void){
 
 
 void RandSpins(uint32_t spins[height][width]){
-	srand(time(0));
-	
+		srand(time(0));
+	  //srand(SEED);
 	for(size_t y = 1;y < height-1;y++){
 		for(size_t x = 1;x < width-1;x++){
-			if(RandF()>DISTRIBUTION){
-				spins[y][x]= BLUE;  //BLUE
+			if(RandF() > DISTRIBUTION){
+				spins[y][x]= RED;  //BLUE
 				M_TOTAL--;
 			}
 			else{
-				spins[y][x]= RED;  //RED
+				spins[y][x]= BLUE;  //RED
 				M_TOTAL++;
 			}
 		}
@@ -56,7 +56,8 @@ void RandSpins(uint32_t spins[height][width]){
 
 float CalculateFermiDirackDistribution(float E){
 	float k = 1.380649; //MOVED 10E-23 AS COPLING CONSTANT 
-	return 1/(expf(E/(k*T))+1); 	
+	
+	return 1.0f/(expf((E)/(k*T))+1); 	
 }
 
 void header(void)
@@ -138,13 +139,13 @@ void UpdateSpins(uint32_t spins[height][width])
 			//system("pause");
 			
 			
-			float E_TOTAL = -1*J*(E_TOP+E_BOTHOM+E_LEFT+E_RIGHT);
+			float E_TOTAL = -1.0f*J*(E_TOP*E_BOTHOM*E_LEFT*E_RIGHT);
 			float chance;
 			E+=E_TOTAL;
 			chance = CalculateFermiDirackDistribution(E_TOTAL);
-			//printf("chance: %f\n",chance);
-			if((RandF() > chance)&&(E_TOTAL > 0)){spins[x][y] = RED; }
-		    else if((RandF() > chance)&&(E_TOTAL < 0)){spins[x][y] = BLUE;}
+			if((RandF() < chance)&&(E_TOTAL > 0)){spins[x][y] = RED; }
+			if((RandF() < chance)&&(E_TOTAL < 0)){spins[x][y] = BLUE;}
+		
 		}
 		count++;
 		if(count%10000==0)
@@ -171,7 +172,7 @@ void LodingParametars(void)
 {
 	printf("\nT =  ");
 	scanf("%f",&T);
-	printf("\n\nJ IS DIVIDED BY 10^-23\n J = ");
+	printf("\n\nJ IS DIVIDED BY 10^-23\nJ = ");
 	scanf("%f",&J);
 	printf("INPUT DISTRIBUTION OF SPINS(0 - 1) ");
 	scanf("%f",&DISTRIBUTION);
@@ -190,7 +191,7 @@ int main()
 	texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STREAMING,width,height);
 	
 	uint32_t spins[height][width];
-	RandSpins(spins);
+	RandSpins(&spins);
 	
 	while(1){
 		
@@ -213,7 +214,7 @@ int main()
 		SDL_RenderClear(renderer);
 		//
 		//UPDATE SPINS
-		UpdateSpins(spins);
+		UpdateSpins(&spins);
 		//
 	}
 	return 0;
