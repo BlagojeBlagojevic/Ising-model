@@ -19,15 +19,15 @@
 #include<time.h>
 #include<math.h>
 #undef main                //275 183
-#define width 500
-#define height 500
+#define width 300
+#define height 300
 #define SEED   500
 //#define T 0
 //#define J 100
-#define RED 0x00FF0000
-#define BLUE 0x000000FF
+#define RED   0x00000000
+#define BLUE  0x0000FF00
 size_t iter=0;
-float T,J;
+float T,J,J_spin[height][width];
 float DISTRIBUTION;
 float M_TOTAL = 0.0f;
 float E = 0.0f;
@@ -38,11 +38,30 @@ float RandF(void){
 }
 
 
+void InitJ()
+{
+		for(size_t y = 0;y < height;y++){
+		for(size_t x = 0;x < width;x++){
+			J_spin[y][x]=J;
+		
+		}
+		}
+
+}
+
+
 void RandSpins(uint32_t spins[height][width]){
 		srand(time(0));
 	  //srand(SEED);
-	for(size_t y = 0;y < height;y++){
-		for(size_t x = 0;x < width;x++){
+	for(size_t y = 1;y < height;y++){
+		for(size_t x = 1;x < width;x++){
+	
+			//J_spin[y][x]=sin(y)*1000+RandF();
+	
+
+
+				
+				
 			if(RandF() < DISTRIBUTION){
 				spins[y][x]= RED;  //BLUE
 				M_TOTAL++;
@@ -53,6 +72,19 @@ void RandSpins(uint32_t spins[height][width]){
 			}
 		}
 	}
+}
+
+void ParaSpines(uint32_t spins[height][width])
+{
+		for(size_t y = 1;y < height;y++){
+		for(size_t x = 1;x < width;x++){
+			if((x*y)%2==0){
+				spins[y][x]= RED;
+			}
+			else
+				spins[y][x]= BLUE;
+		}
+		}
 }
 
 float CalculateFermiDirackDistribution(float E){
@@ -67,7 +99,7 @@ void header(void)
 	printf("			Lenz-Ising model\n");
 	printf("************************************************************\n");
 	printf("\n\nThe Ising model, named after the physicists Ernst Ising and Wilhelm Lenz,\nis a mathematical model of ferromagnetism in statistical mechanics.\nThe model consists of discrete variables\nthat represent magnetic dipole moments\nof atomic spins that can be in one of two states.\n\n");
-	printf("LEGENDS: RED: +SPIN BLUE -SPIN\n\n");
+	printf("LEGENDS: BLACK: +SPIN WHITE -SPIN\n\n");
 
 }
 void LodingParametars(void)
@@ -150,14 +182,30 @@ void UpdateSpins(uint32_t spins[height][width])
 				E_RIGHT = 1.0f;
 			}		
 			//system("pause");
-			
-			
-			float E_TOTAL = -1.0f*J*(E_TOP*E_BOTHOM*E_LEFT*E_RIGHT);
+			//J_spin[y][x]=J_spin[y][x-1];
+			float E_TOTAL = -1.0f*J_spin[x][y]*(E_TOP*E_BOTHOM*E_LEFT*E_RIGHT);
 			float chance;
 			E+=E_TOTAL;
 			chance = CalculateFermiDirackDistribution(E_TOTAL);
-			if((RandF() < chance)&&(E_TOTAL > 0)){spins[x][y] = RED; }
-			if((RandF() < chance)&&(E_TOTAL < 0)){spins[x][y] = BLUE;}
+			if((RandF() <= chance)&&(E_TOTAL >= 0)){spins[x][y] = RED;if(x!=width)
+			{
+				if((x!=width-1)&&(y!=height-1))
+				{
+					x++;
+				
+				}
+			} 
+			}
+			if((RandF() <= chance)&&(E_TOTAL <= 0))
+			{
+				spins[x][y] = BLUE;
+				if((x!=width-1)&&(y!=height-1))
+				{
+					x++;
+				}
+				
+			 
+			}
 
 		
 		}
@@ -202,7 +250,8 @@ int main()
 	
 	uint32_t spins[height][width];
 	RandSpins(&spins);
-	
+	InitJ();
+	//ParaSpines(&spins);
 	while(1){
 		
 		//LOCK TEXTURE
