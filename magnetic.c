@@ -187,10 +187,12 @@ void UpdateSpins(uint32_t spins[height][width])
 			float chance;
 			E+=E_TOTAL;
 			chance = CalculateFermiDirackDistribution(E_TOTAL);
-			if((RandF() <= chance)&&(E_TOTAL >= 0)){spins[x][y] = RED;if(x!=width)
+			if((RandF() <= chance)&&(E_TOTAL >= 0)){spins[x][y] = RED;
+			if(x!=width)
 			{
-				if((x!=width-1)&&(y!=height-1))
+				if((x!=width-2)&&(y!=height-1))
 				{
+					x++;
 					x++;
 				
 				}
@@ -199,8 +201,9 @@ void UpdateSpins(uint32_t spins[height][width])
 			if((RandF() <= chance)&&(E_TOTAL <= 0))
 			{
 				spins[x][y] = BLUE;
-				if((x!=width-1)&&(y!=height-1))
+				if((x!=width-2)&&(y!=height-1))
 				{
+					x++;
 					x++;
 				}
 				
