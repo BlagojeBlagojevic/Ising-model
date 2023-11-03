@@ -21,7 +21,7 @@
 #undef main                //275 183
 #define width 300
 #define height 300
-#define SEED   500
+#define SEED   5005
 //#define T 0
 //#define J 100
 #define RED   0x00000000
