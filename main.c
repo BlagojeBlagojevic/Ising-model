@@ -256,7 +256,8 @@ int main()
 	InitJ();
 	//ParaSpines(&spins);
 	while(1){
-		
+		SDL_Event event;
+		while (SDL_PollEvent(&event)) {};
 		//LOCK TEXTURE
 		uint32_t *pixels;
 		int pitch;        //SIZE BASED ON RESOLUTION
